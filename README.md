@@ -18,6 +18,7 @@ Shell Eco-marathon **Prototype / Battery Electric** takımları için tasarım v
 | Ağırlık merkezi | Düzenlenebilir kütle tablosu, aks yükleri, statik devrilme eşiği |
 | Coast-down analizi | Test verisinden Crr ve CdA çıkarımı (analitik modele Nelder–Mead uydurma) |
 | Aerodinamik tahmin | Hoerner bağıntısıyla gövde Cd ön tahmini, CdA, sürükleme gücü |
+| 3B model görüntüleyici (`3b.html`) | Konsept aracın etkileşimli 3B modeli: dış, röntgen ve kokpit görünümleri, standart görünüşler, parça listesi (three.js, model sayfaya gömülü) |
 
 Varsayılan parkur SEM Polonya biçimidir: 11 tur × 1327 m = 14,6 km, en fazla 35 dakika. Viraj listesi temsilidir; gerçek parkur verisi için SEM Data & Telemetry Portal kullanılmalıdır.
 
@@ -34,6 +35,7 @@ Herhangi bir statik sunucu da yeterlidir (ör. `python -m http.server`). ES mod�
 
 ```
 index.html          sayfa iskeleti
+3b.html             3B model görüntüleyici (tek dosya, GLB gömülü)
 assets/calc.js      saf hesap fonksiyonları (tarayıcı + Node)
 assets/charts.js    SVG grafikler (ipucu, tablo görünümü)
 assets/app.js       arayüz, formlar, sekmeler

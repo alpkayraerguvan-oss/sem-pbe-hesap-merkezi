@@ -192,3 +192,5 @@ table.cg-table th:nth-child(1) { width: 44%; }
 table.cg-table th:nth-child(2), table.cg-table th:nth-child(3), table.cg-table th:nth-child(4) { width: 16%; }
 table.cg-table th:nth-child(5) { width: 8%; }
 section.tab { scroll-margin-top: 80px; }
+.sidenav a.nav-page { border: 1px dashed var(--border); margin: 4px 0; }
+.sidenav a.nav-page::after { content: " →"; color: var(--muted); }
