@@ -1,0 +1,12 @@
+{
+  "name": "sem-pbe-hesap-merkezi",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shell Eco-marathon Prototype Battery Electric tasarım hesapları (statik web uygulaması)",
+  "type": "module",
+  "scripts": {
+    "test": "node tests/calc.test.mjs",
+    "start": "npx --yes serve -l 5173 ."
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SEM PBE Hesap Merkezi</title>
+  <meta name="description" content="Shell Eco-marathon Prototype / Battery Electric takımları için enerji, strateji, direksiyon, fren, roll bar, batarya, ağırlık merkezi, coast-down ve aerodinamik hesapları.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M6 40c8-14 26-22 52-12-8 10-30 16-52 12z' fill='%232a78d6'/%3E%3Ccircle cx='20' cy='44' r='6' fill='%230b0b0b'/%3E%3Ccircle cx='48' cy='44' r='6' fill='%230b0b0b'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <svg viewBox="0 0 64 32" width="44" height="22" aria-hidden="true"><path d="M3 22c6-10 20-16 58-6-8 8-30 11-58 6z" fill="var(--series-1)"/><circle cx="16" cy="25" r="5" fill="var(--text-primary)"/><circle cx="48" cy="25" r="5" fill="var(--text-primary)"/></svg>
+      <div>
+        <h1>SEM PBE Hesap Merkezi</h1>
+        <p class="sub">Shell Eco-marathon 2027 · Prototype / Battery Electric · tüm tasarım hesapları tek yerde</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button type="button" id="themeBtn" class="ghost-btn" aria-label="Tema değiştir">Tema: Otomatik</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="sidenav" aria-label="Hesap araçları">
+      <a href="#arac" data-tab="arac">Araç &amp; enerji</a>
+      <a href="#strateji" data-tab="strateji">Strateji simülasyonu</a>
+      <a href="#duyarlilik" data-tab="duyarlilik">Duyarlılık analizi</a>
+      <a href="#tur" data-tab="tur">Tur / süre planı</a>
+      <a href="#direksiyon" data-tab="direksiyon">Direksiyon &amp; dönüş</a>
+      <a href="#fren" data-tab="fren">Fren (%20 eğim)</a>
+      <a href="#rollbar" data-tab="rollbar">Roll bar (700 N)</a>
+      <a href="#batarya" data-tab="batarya">Batarya</a>
+      <a href="#boyut" data-tab="boyut">Boyut uyumu (Md. 39)</a>
+      <a href="#agirlik" data-tab="agirlik">Ağırlık merkezi</a>
+      <a href="#coastdown" data-tab="coastdown">Coast-down analizi</a>
+      <a href="#aero" data-tab="aero">Aerodinamik tahmin</a>
+      <a href="#kaynak" data-tab="kaynak">Kaynaklar &amp; notlar</a>
+    </nav>
+
+    <main id="main">
+      <section id="arac" class="tab">
+        <h2>Araç parametreleri ve hızlı enerji hesabı</h2>
+        <p class="lead">Parametreler tüm araçlarda (strateji, duyarlılık, coast-down) ortak kullanılır ve bu tarayıcıda saklanır. Bir ön ayarla başlayın, sonra kendi ölçümlerinizle güncelleyin.</p>
+        <div class="presets" role="group" aria-label="Ön ayarlar">
+          <button type="button" data-preset="baseline">1. yıl (ticari motor + kayış)</button>
+          <button type="button" data-preset="target">Hedef tasarım</button>
+          <button type="button" data-preset="stretch">İddialı (2. yıl)</button>
+        </div>
+        <div class="grid2">
+          <div class="card"><h3>Araç</h3><div id="carForm" class="form"></div></div>
+          <div class="stack">
+            <div class="card"><h3>Sabit hızda hızlı hesap (virajsız)</h3><div id="quickForm" class="form compact"></div><div id="quickOut" class="kpis"></div></div>
+            <div class="card"><h3>Hıza göre güç</h3><div id="powerChart"></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="strateji" class="tab" hidden>
+        <h2>Strateji simülasyonu: sabit hız ve pulse &amp; glide</h2>
+        <p class="lead">Zaman adımlı model; yuvarlanma, aerodinamik, viraj kayma kaybı, motor/sürücü kayıp haritası ve joulemetreden geçen yardımcı tüketimi içerir. Varsayılan parkur SEM Polonya biçimidir (11 tur, 14,6 km, ≤ 35 dk). Viraj listesi temsilidir — gerçek parkur verisini SEM Data &amp; Telemetry Portal'dan girin.</p>
+        <div class="grid2">
+          <div class="card"><h3>Parkur</h3><div id="trackForm" class="form"></div>
+            <label class="field wide"><span>Virajlar (açı°/yarıçap m, virgülle)</span><input id="turnsInput" type="text" spellcheck="false"></label>
+            <h3 class="mt">Elle pulse &amp; glide (isteğe bağlı)</h3><div id="pgForm" class="form compact"></div>
+            <div class="btnrow"><button type="button" class="primary" id="runSim">Simüle et (optimum ara)</button><button type="button" id="runManual">Elle P&amp;G değerleriyle</button></div>
+          </div>
+          <div class="stack">
+            <div class="card"><h3>Sonuç</h3><div id="simOut"></div></div>
+            <div class="card"><h3>Enerji dağılımı (seçili strateji)</h3><div id="lossChart"></div></div>
+          </div>
+        </div>
+        <div class="card"><h3>Hız profili (ilk 10 dk)</h3><div id="traceChart"></div></div>
+      </section>
+
+      <section id="duyarlilik" class="tab" hidden>
+        <h2>Duyarlılık analizi</h2>
+        <p class="lead">Her parametre tek tek değiştirilerek sabit hız stratejisiyle verimdeki değişim hesaplanır. Önceliklendirme için kullanın: en uzun çubuk en çok kazandıran iştir.</p>
+        <div class="card"><div class="btnrow"><button type="button" class="primary" id="runSens">Hesapla</button><span id="sensRef" class="muted"></span></div><div id="sensChart"></div></div>
+      </section>
+
+      <section id="tur" class="tab" hidden>
+        <h2>Tur ve süre planlayıcı (pano tahtası)</h2>
+        <div class="grid2">
+          <div class="card"><div id="lapForm" class="form"></div><div id="lapOut" class="kpis"></div></div>
+          <div class="card"><h3>Tur sonu hedef zamanları</h3><div id="lapTable"></div></div>
+        </div>
+      </section>
+
+      <section id="direksiyon" class="tab" hidden>
+        <h2>Direksiyon geometrisi ve dönüş yarıçapı (Madde 42: ≤ 8 m)</h2>
+        <div class="grid2">
+          <div class="card"><div id="steerForm" class="form"></div></div>
+          <div class="card"><div id="steerOut" class="kpis"></div><p class="note">Tadpole düzen (2 ön teker, 1 arka teker) için Ackermann varsayımı. "Dış teker yarıçapı", kuralın ölçtüğü değerdir: dış ön tekerin izlediği daire. Süpürme: teker ön/arka kenarının aks yüksekliğinde yana kayması — gövde/teker kuyusu boşluğu için.</p></div>
+        </div>
+      </section>
+
+      <section id="fren" class="tab" hidden>
+        <h2>Fren kontrolü: %20 eğimde tutma (Madde 43b)</h2>
+        <div class="grid2">
+          <div class="card"><div class="presets small" role="group" aria-label="Fren sistemi"><button type="button" data-brake="front">Ön sistem (ayak pedalı, 2 teker)</button><button type="button" data-brake="rear">Arka sistem (el kolu, 1 teker)</button></div><div id="brakeForm" class="form"></div></div>
+          <div class="card"><div id="brakeOut" class="kpis"></div><p class="note">Her sistem tek başına aracı (sürücü dahil) %20 eğimde durdurmalıdır. İki hidrolik sistem, aks başına bir tane; tele/kabloyla pedal bağlantısı yasak; pedal ≥ 10 cm² ve ≥ 3 cm genişlik.</p></div>
+        </div>
+      </section>
+
+      <section id="rollbar" class="tab" hidden>
+        <h2>Roll bar dayanımı (Madde 26: 700 N, ≥ 50 mm kask payı)</h2>
+        <div class="grid2">
+          <div class="card"><div id="rbForm" class="form"></div></div>
+          <div class="card"><div id="rbOut" class="kpis"></div><p class="note">Basitleştirilmiş kiriş modeli (orta noktadan 700 N). Kesin doğrulama için FEA ve fiziksel yük testi yapın: dikey, yatay ve dik yönlerde kalıcı şekil değişimi olmamalı.</p></div>
+        </div>
+      </section>
+
+      <section id="batarya" class="tab" hidden>
+        <h2>Batarya boyutlandırma (Madde 57 ve 66)</h2>
+        <div class="grid2">
+          <div class="card"><div id="batForm" class="form"></div></div>
+          <div class="card"><div id="batOut" class="kpis"></div><p class="note">Kurallar: araç üzerinde hiçbir noktada 60 V'u aşmamalı; Li bazlı batarya ≤ 1000 Wh; tek paket, BMS paketin içinde; hücre seviyesinde aşırı deşarj ve aşırı akım koruması; pozitif uçta ≤ 300 mm mesafede kısa devre koruması; çelik tepsi ya da şarj torbası.</p></div>
+        </div>
+      </section>
+
+      <section id="boyut" class="tab" hidden>
+        <h2>Boyut ve kütle uyumu — Prototype (Madde 39)</h2>
+        <div class="grid2">
+          <div class="card"><div id="dimForm" class="form"></div></div>
+          <div class="card"><div id="dimOut"></div></div>
+        </div>
+      </section>
+
+      <section id="agirlik" class="tab" hidden>
+        <h2>Ağırlık merkezi, aks yükleri ve devrilme eşiği</h2>
+        <div class="grid2">
+          <div class="card"><div id="cgGeom" class="form compact"></div><div id="cgTable"></div><div class="btnrow"><button type="button" id="cgAdd">Satır ekle</button><button type="button" id="cgReset">Varsayılana dön</button></div></div>
+          <div class="card"><div id="cgOut" class="kpis"></div><p class="note">X: burundan ölçülür (mm), Z: yerden (mm). Devrilme eşiği: ağırlık merkezinin ön teker–arka teker devrilme eksenine uzaklığından hesaplanan yanal ivme sınırı (statik).</p></div>
+        </div>
+      </section>
+
+      <section id="coastdown" class="tab" hidden>
+        <h2>Coast-down analizi: Crr ve CdA'yı testten çıkarın</h2>
+        <p class="lead">Rüzgârsız, düz bir zeminde aracı ~30 km/sa'ten serbest bırakın ve zaman–hız kaydı alın (GPS/teker sensörü). Model: m·dv/dt = −(Crr·m·g + F<sub>rulman</sub> + ½·ρ·CdA·v²). En az iki yönde tekrarlayıp ortalayın.</p>
+        <div class="grid2">
+          <div class="card"><label class="field wide"><span>Veri (her satır: zaman_s, hız_km/sa)</span><textarea id="cdData" rows="12" spellcheck="false"></textarea></label>
+            <div id="cdForm" class="form compact"></div>
+            <div class="btnrow"><button type="button" class="primary" id="cdRun">Analiz et</button><button type="button" id="cdSample">Örnek veri yükle</button></div></div>
+          <div class="stack"><div class="card"><div id="cdOut" class="kpis"></div></div><div class="card"><div id="cdChart"></div></div></div>
+        </div>
+      </section>
+
+      <section id="aero" class="tab" hidden>
+        <h2>Aerodinamik ön tahmin (Hoerner, gövde narinliği)</h2>
+        <div class="grid2">
+          <div class="card"><div id="aeroForm" class="form"></div></div>
+          <div class="card"><div id="aeroOut" class="kpis"></div><p class="note">C<sub>D</sub> = C<sub>f</sub>·[3(L/d) + 4,5(d/L)<sup>0,5</sup> + 21(d/L)²] (cephe alanına göre, devir gövdesi). Tekerlekler, açıklıklar, zemin etkisi ve birleşim boşlukları için "ek ΔCd" girin. Kesin değer için CFD ve coast-down ile doğrulayın.</p></div>
+        </div>
+      </section>
+
+      <section id="kaynak" class="tab" hidden>
+        <h2>Kaynaklar ve notlar</h2>
+        <div class="card prose">
+          <ul>
+            <li>Resmî kurallar: <a href="https://www.shellecomarathon.com/about/global-rules.html" target="_blank" rel="noopener">Shell Eco-marathon Global Rules</a> (2027 Bölüm I) ve etkinliğe özel Bölüm II.</li>
+            <li>Kayıt portalı: <a href="https://register.makethefuture.shell/" target="_blank" rel="noopener">register.makethefuture.shell</a> — kayıt ücretsizdir; Teknik Faz + Lojistik Faz.</li>
+            <li>2027 programı: SEM United States (6–10 Nisan 2027), <b>SEM Poland (8–12 Haziran 2027, Silesia Ring)</b>, SEM Brazil (Eylül 2027). Tarihler değişebilir.</li>
+            <li>Sonuçlar: <a href="https://results.sem-app.com/app/sem_2026_pl/P/BE" target="_blank" rel="noopener">SEM Poland 2026 — Prototype Battery Electric</a> (1. Polyjoule 1.095 km/kWh).</li>
+            <li>Yeni takımlar için açık kaynak: <a href="http://www.timupsinsa.com/2020/08/open-source.html" target="_blank" rel="noopener">TIM UPS INSA open-source projesi</a>.</li>
+          </ul>
+          <h3>Model varsayımları</h3>
+          <ul>
+            <li>Viraj kaybı: F<sub>yanal</sub>²/C<sub>α</sub> (3 lastik toplam viraj sertliği). İdeal çizgi yarıçapı = orta hat × katsayı.</li>
+            <li>Motor/sürücü: P<sub>el</sub> = P<sub>mek</sub>/η + a·T² + P<sub>boşta</sub>; süzülmede sürücü bekleme gücü. Direkt tahrikte motor sürüklenmesi (b·ω + c·ω²) her zaman mekanik kayıptır.</li>
+            <li>Joulemetre yardımcı tüketimi de ölçer (korna, acil stop röle bobini ve Md. 57i'deki kendinden pilli cihazlar hariç).</li>
+            <li>Sonuçlar tasarım kararlarını karşılaştırmak içindir; mutlak değerleri test verisiyle kalibre edin.</li>
+          </ul>
+        </div>
+      </section>
+    </main>
+  </div>
+  <footer class="foot">Takım içi tasarım aracı · Resmî Shell Eco-marathon ürünü değildir · Kurallar için daima en güncel resmî belgeleri esas alın.</footer>
+  <script type="module" src="assets/app.js"></script>
+</body>
+</html>
